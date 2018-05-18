@@ -46,7 +46,7 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("CompleteNetworkPerformances");
 
 // Network settings
-int nDevices = 2000;
+int nDevices = 200;
 int gatewayRings = 1;
 int nGateways = 3*gatewayRings*gatewayRings-3*gatewayRings+1;
 double radius = 6300;
@@ -871,7 +871,7 @@ int main (int argc, char *argv[])
   {
     std::cout<< totalPktsSent
       << " " << received << " " << interfered << " " << noMoreReceivers
-             << " " << underSensitivity << " " << lostBecauseTx << "\n";
+             << " " << underSensitivity << " " << lostBecauseTx << " ";
   }
 
   // Statistics ignoring transient
