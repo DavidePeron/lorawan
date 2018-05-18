@@ -7,7 +7,7 @@
 # i= number of nDevices
 # increment= increment in EDs
 gatewayRings=1
-nDevices=4000
+nDevices=2000
 radius=6300
 #gwrad=$(echo "10000/(2*($gatewayRings - 1)+1)" | bc -l)
 globalrun=1
@@ -42,14 +42,15 @@ cd ../../../
 # echo "- Receive paths"
 # echo "- Path loss"
 # echo -n "Configuring and building..."
-./waf --build-profile=optimized --out=build/optimized configure
-./waf build
+# ./waf --build-profile=optimized --out=build/optimized configure
+# ./waf build
 # echo " done."
 
 # Run the script with a fixed period
-while [ $initialPeriod -le $finalPeriod ]
+i=$initialPeriod
+while [ $i -le $finalPeriod ]
 do
-    echo "period= $initialPeriod"
+    # echo "period= $i"
     # Perform multiple runs
     currentrun=1
     centralappPeriodsum=0
@@ -93,7 +94,7 @@ do
             --gatewayRings=$gatewayRings
             --radius=$radius
             --gatewayRadius=1500
-            --appPeriod=$initialPeriod
+            --appPeriod=$i
             --periodsToSimulate=$periodsToSimulate
 	          --transientPeriods=$transientPeriods
             --maxNumbTx=$maxNumbTx
@@ -166,35 +167,35 @@ do
     # Average in runs
     #echo "Central averaged results centraldevicessum= $centraldevicessum , maxRuns= $maxRuns"
     echo -n " $(echo "$centralnDevices" | bc -l)"
-    echo -n " $(echo "$centralappPeriodsum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralappPeriodsum/$maxRuns" | bc -l)"
 
-    echo -n " $(echo "$centraltotpacketsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralreceivedsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralinterferedsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralnomorerxsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralundersenssum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centraltotpacketsum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralreceivedsum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralinterferedsum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralnomorerxsum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralundersenssum/$maxRuns" | bc -l)"
 
-    echo -n " $(echo "$centralS1sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS2sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS3sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS4sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS5sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS6sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS7sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralS8sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS1sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS2sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS3sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS4sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS5sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS6sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS7sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralS8sum/$maxRuns" | bc -l)"
 
-    echo -n " $(echo "$centralF1sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF2sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF3sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF4sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF5sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF6sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF7sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralF8sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF1sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF2sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF3sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF4sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF5sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF6sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF7sum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralF8sum/$maxRuns" | bc -l)"
 
-    echo -n " $(echo "$centralavgdelaysum/$maxRuns" | bc -l)"
-    echo -n " $(echo "$centralavgAckdelaysum/$maxRuns" | bc -l)"
-    echo " $(echo "$centraltotRetxsum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=2; $centralavgdelaysum/$maxRuns" | bc -l)"
+    echo -n " $(echo "scale=4; $centralavgAckdelaysum/$maxRuns" | bc -l)"
+    echo " $(echo "scale=4; $centraltotRetxsum/$maxRuns" | bc -l)"
 
-    i=$(echo "$initialPeriod * $increment" | bc -l)
+    i=$(echo "$i + $increment" | bc -l)
 done
