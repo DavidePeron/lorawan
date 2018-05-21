@@ -7,11 +7,11 @@
 # i= number of nDevices
 # increment= increment in EDs
 gatewayRings=1
-nDevices=400
+nDevices=1000
 radius=6300
 #gwrad=$(echo "10000/(2*($gatewayRings - 1)+1)" | bc -l)
 globalrun=1
-maxRuns=5
+maxRuns=6
 initialPeriod=$1
 increment=$2
 finalPeriod=$3
@@ -53,36 +53,6 @@ do
     # echo "period= $i"
     # Perform multiple runs
     currentrun=1
-    centralappPeriodsum=0
-    nDevicesLoop=0
-
-    centraltotpacketsum=0
-    centralreceivedsum=0
-    centralinterferedsum=0
-    centralnomorerxsum=0
-    centralundersenssum=0
-    centrallostBecauseTxsum=0
-
-    centralS1sum=0
-    centralS2sum=0
-    centralS3sum=0
-    centralS4sum=0
-    centralS5sum=0
-    centralS6sum=0
-    centralS7sum=0
-    centralS8sum=0
-    centralF1sum=0
-    centralF2sum=0
-    centralF3sum=0
-    centralF4sum=0
-    centralF5sum=0
-    centralF6sum=0
-    centralF7sum=0
-    centralF8sum=0
-
-    centralavgdelaysum=0
-    centralavgAckdelaysum=0
-    centraltotRetxsum=0
 
 # echo "Done initialization"
     while [ $currentrun -le $maxRuns ]
@@ -100,106 +70,11 @@ do
 	          --transientPeriods=$transientPeriods
             --maxNumbTx=$maxNumbTx
             --RngRun=$globalrun" | grep -v "build" | tr -d '\n')"
-        # echo "$output"
-        centralnDevices=$(echo "$output" | awk '{print $1}')             # nDevices
-        centralappPeriod=$(echo "$output" | awk '{print $2}')
-        centraltotpacket=$(echo "$output" | awk '{print $3}')             # total packets sent
-        centralreceived=$(echo "$output" | awk '{print $4}')            # received packets
-        centralinterfered=$(echo "$output" | awk '{print $5}')          # interfered packets
-        centralnomorerx=$(echo "$output" | awk '{print $6}')            # packets discarded because no more receivers available
-        centralundersens=$(echo "$output" | awk '{print $7}')           # packets discarded because under sensitivity
-
-        centrallostBecauseTx=$(echo "$output" | awk '{print $8}')
-
-        centralS1=$(echo "$output" | awk '{print $9}')
-        centralS2=$(echo "$output" | awk '{print $10}')
-        centralS3=$(echo "$output" | awk '{print $11}')
-        centralS4=$(echo "$output" | awk '{print $12}')
-        centralS5=$(echo "$output" | awk '{print $13}')
-        centralS6=$(echo "$output" | awk '{print $14}')
-        centralS7=$(echo "$output" | awk '{print $15}')
-        centralS8=$(echo "$output" | awk '{print $16}')
-        centralF1=$(echo "$output" | awk '{print $17}')
-        centralF2=$(echo "$output" | awk '{print $18}')
-        centralF3=$(echo "$output" | awk '{print $19}')
-        centralF4=$(echo "$output" | awk '{print $20}')
-        centralF5=$(echo "$output" | awk '{print $21}')
-        centralF6=$(echo "$output" | awk '{print $22}')
-        centralF7=$(echo "$output" | awk '{print $23}')
-        centralF8=$(echo "$output" | awk '{print $24}')
-
-        centralavgdelay=$(echo "$output" | awk '{print $25}')
-        centralavgAckdelay=$(echo "$output" | awk '{print $26}')
-        centraltotRetx=$(echo "$output" | awk '{print $27}')
-
-
-        # Sum the results
-        centralappPeriodsum=$(echo "$centralappPeriodsum + $centralappPeriod" | bc -l)
-        centralreceivedsum=$(echo "$centralreceivedsum + $centralreceived" | bc -l)
-        centralinterferedsum=$(echo "$centralinterferedsum + $centralinterfered" | bc -l)
-        centralnomorerxsum=$(echo "$centralnomorerxsum + $centralnomorerx" | bc -l)
-        centralundersenssum=$(echo "$centralundersenssum + $centralundersens" | bc -l)
-        centraltotpacketsum=$(echo "$centraltotpacketsum + $centraltotpacket" | bc -l)
-        centrallostBecauseTxsum=$(echo "$centrallostBecauseTxsum + $centrallostBecauseTx" | bc -l)
-
-        centralS1sum=$(echo "$centralS1sum + $centralS1" | bc -l)
-        centralS2sum=$(echo "$centralS2sum + $centralS2" | bc -l)
-        centralS3sum=$(echo "$centralS3sum + $centralS3" | bc -l)
-        centralS4sum=$(echo "$centralS4sum + $centralS4" | bc -l)
-        centralS5sum=$(echo "$centralS5sum + $centralS5" | bc -l)
-        centralS6sum=$(echo "$centralS6sum + $centralS6" | bc -l)
-        centralS7sum=$(echo "$centralS7sum + $centralS7" | bc -l)
-        centralS8sum=$(echo "$centralS8sum + $centralS8" | bc -l)
-
-        centralF1sum=$(echo "$centralF1sum + $centralF1" | bc -l)
-        centralF2sum=$(echo "$centralF2sum + $centralF2" | bc -l)
-        centralF3sum=$(echo "$centralF3sum + $centralF3" | bc -l)
-        centralF4sum=$(echo "$centralF4sum + $centralF4" | bc -l)
-        centralF5sum=$(echo "$centralF5sum + $centralF5" | bc -l)
-        centralF6sum=$(echo "$centralF6sum + $centralF6" | bc -l)
-        centralF7sum=$(echo "$centralF7sum + $centralF7" | bc -l)
-        centralF8sum=$(echo "$centralF8sum + $centralF8" | bc -l)
-
-        centralavgdelaysum=$(echo "$centralavgdelaysum + $centralavgdelay" | bc -l)
-        centralavgAckdelaysum=$(echo "$centralavgAckdelaysum + $centralavgAckdelay" | bc -l)
-        centraltotRetxsum=$(echo "$centraltotRetxsum + $centraltotRetx" | bc -l)
+        echo "$output"
 
         currentrun=$(( $currentrun+1 ))
         globalrun=$(( $globalrun+1 ))
     done
 
-    # Average in runs
-    #echo "Central averaged results centraldevicessum= $centraldevicessum , maxRuns= $maxRuns"
-    echo -n " $(echo "$centralnDevices" | bc -l)"
-    echo -n " $(echo "scale=2; $centralappPeriodsum/$maxRuns" | bc -l)"
-
-    echo -n " $(echo "scale=2; $centraltotpacketsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralreceivedsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralinterferedsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralnomorerxsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralundersenssum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centrallostBecauseTxsum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS1sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS2sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS3sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS4sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS5sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS6sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS7sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralS8sum/$maxRuns" | bc -l)"
-
-    echo -n " $(echo "scale=2; $centralF1sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF2sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF3sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF4sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF5sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF6sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF7sum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=2; $centralF8sum/$maxRuns" | bc -l)"
-
-    echo -n " $(echo "scale=4; $centralavgdelaysum/$maxRuns" | bc -l)"
-    echo -n " $(echo "scale=4; $centralavgAckdelaysum/$maxRuns" | bc -l)"
-    echo    " $(echo "scale=2; $centraltotRetxsum/$maxRuns" | bc -l)"
-
-    i=$(echo "$i + $increment" | bc -l)
+    i=$(echo "$i*$increment" | bc -l)
 done
