@@ -163,8 +163,8 @@ EndDeviceLoraMac::Send (Ptr<Packet> packet)
       // Add the ACK_TIMEOUT random delay if it is a retransmission.
       if (m_retxParams.waitingAck)
         {
-          // double ack_timeout = m_uniformRV->GetValue (1,3);
-          double ack_timeout = m_phy->GetOnAirTime(packet, params).GetSeconds() * 2;
+          double ack_timeout = m_uniformRV->GetValue (1,3);
+          // double ack_timeout = m_phy->GetOnAirTime(packet, params).GetSeconds() * 2;
           netxTxDelay = netxTxDelay + Seconds (ack_timeout);
         }
       postponeTransmission (netxTxDelay, packet);

@@ -7,11 +7,11 @@
 # i= number of nDevices
 # increment= increment in EDs
 gatewayRings=1
-nDevices=1000
+nDevices=700
 radius=6300
 #gwrad=$(echo "10000/(2*($gatewayRings - 1)+1)" | bc -l)
 globalrun=1
-maxRuns=6
+maxRuns=10
 initialPeriod=$1
 increment=$2
 finalPeriod=$3
@@ -76,5 +76,5 @@ do
         globalrun=$(( $globalrun+1 ))
     done
 
-    i=$(echo "$i*$increment" | bc -l)
+    i=$(echo "$i + $increment" | bc -l)
 done
